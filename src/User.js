@@ -17,99 +17,48 @@ export function User(name, date) {
   this.friends = [];
   this.likes = [];
 
-
-
   this.addToFriends = function (user) {
-    if (!this.friends.includes(user)) {
+    if (this.friends.includes(user)) {
+      this.friends = this.friends.filter((friend) => friend != user);
+      user.friends = user.friends.filter((friend) => friend != this)
+    } else {
       this.friends.push(user);
       user.friends.push(this);
-      return;
     }
-    this.friends = this.friends.filter((friend) => friend !== user);
-    user.friends = user.friends.filter((friend) => friend !== this);
-  }
+  };
 
-  /**
-   *
-   * @param {Book} book
-   */
+  this.removeFriend = this.addToFriends;
+
   this.likeBook = function (book) {
-    if (!this.likes.includes(book) && !book.likedUsers.includes(this)) {
+    if (this.likes.includes(book)) {
+      this.likes = this.likes.filter((liked) => liked != book);
+      book.likedUsers = book.likedUsers.filter((user) => user != this);
+    } else {
       this.likes.push(book);
       book.likedUsers.push(this);
-      return;
     }
-    this.likes = this.likes.filter((book) => book !== book);
-    book.likedUsers = book.likedUsers.filter((user) => user !== user);
-  }
+  };
 
-  /**
-   *
-   * @param user
-   */
-  this.removeFriend = this.addToFriends
-
-  // function (user) {
-  // if (this.friends.includes(user)) {
-  //   this.friends = this.friends.filter((friend) => friend !== user);
-  //   user.friends = user.friends.filter((friend) => friend !== this);
-  //   return ;
-  // }
-  //   this.friends.push(user)
-  //   user.friends.push(this)
-
-  // this.friends = new Set ([...this.friends]);
-  // user.friends = new Set ([...user.friends]);
-  // if (this.friends.delete(user) && user.friends.delete(this)) {
-  //   this.friends = [...this.friends];
-  //   user.friends = [...user.friends];
-  // }
-  // else if (this.friends.add(user) && user.friends.add(this)) {
-  //     this.friends = [...this.friends];
-  //     user.friends = [...user.friends];
-  //   }
-  // }
-
-
-  this.unlikeBook = this.likeBook
-  //   function (book) {
-  //   if (this.likes.includes(book) && book.likedUsers.includes(this)) {
-  //     this.likes = this.likes.filter((book) => book !== book);
-  //     book.likedUsers = book.likedUsers.filter((user) => user !== user);
-  //   }
-  //   else {
-  //     this.likes.push(book);
-  //     book.likedUsers.push(this);
-  //   }
-  // }
+  this.unlikeBook = this.likeBook;
 
   Object.defineProperty(this, 'friendsNames', {
     get() {
-      return this.friends
-        .map(({ name }) => {
-          return `${name}`;
-        })
-        .join(', ');
+      let friendsNames = this.friends.map(({ name }) => name).join(', ');
+      return friendsNames;
     }
   });
 
   Object.defineProperty(this, 'likedBooks', {
     get() {
-      return this.likes
-        .map(({ title }) => {
-          return `${title}`;
-        })
-        .join(', ');
+      let likedBooks = this.likes.map(({ title }) => title).join(', ');
+      return likedBooks;
     }
   });
 
   Object.defineProperty(this, 'publishedBooks', {
     get() {
-      return this.myBooks
-        .map(({ title }) => {
-          return `${title}`;
-        })
-        .join(', ');
+      let publishedBooks = this.myBooks.map(({ title }) => title).join(', ');
+      return publishedBooks;
     }
   });
 }
